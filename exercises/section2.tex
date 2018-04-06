@@ -78,6 +78,8 @@
 \newtheorem{exercise}{Exercise}[lecnum]
 \newtheorem{example}{Example}[lecnum]
 \newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+\newenvironment{solution}{
+  \begin{flushleft} \noindent ~~\underline{\emph{Solution}}: \rmfamily}{\end{flushleft}}
 
 % **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
 
@@ -110,36 +112,133 @@ We refer to this as a normal/inverse gamma prior on $\mu$ and $\sigma^2$ (or a n
 
 
 
-
 \begin{exercise}
   Derive the conditional posterior distributions $p(\mu, \omega|y_1,\dots, y_n)$ (or $p(\mu, \sigma^2|y_1,\dots, y_n)$) and show that it is in the same family as $p(\mu, \omega)$. What are the updated parameters $\alpha_n, \beta_n,\mu_n$ and $\kappa_n$?
 \end{exercise}
 
+\begin{solution}
+Based on Bayes law, $p(\mu, \omega | y_1,\dots, y_n) \propto p(y_1, \dots, y_n |\mu, \omega) \cdot p(\mu|\omega) \cdot p(\omega)$ Given conditions above, we may re-write this equation as following:
+\begin{equation}
+\begin{split}
+p(y_1, \dots, y_n |\mu, \omega) \cdot p(\mu|\omega) \cdot p(\omega) &= \prod_i^n N(\mu, 1/\omega) N(\mu, 1/(\omega \kappa_0)) 
+\\ &\propto \prod_i^nw^{1/2}exp(-\frac{\omega}{2}(\mu-y_i)^2) \omega^{1/2}exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega) 
+\\ &= w^{n/2}exp(-\sum_i^n\frac{\omega}{2}(\mu-y_i)^2) \omega^{1/2} exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega) 
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\sum_i^n\frac{\omega}{2}(\mu-y_i)^2) exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2) exp(-\beta_0\omega)  
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\frac{n\omega}{2}(\mu-y_i)^2 -\frac{\omega k_0}{2}(\mu-\mu_0)^2 -\beta_0\omega)  
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\frac{n\omega}{2}(\mu^2-2y_i\mu+y_i^2) -\frac{\omega k_0}{2}(\mu^2-2\mu_0\mu+\mu_0^2) -\beta_0\omega) 
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\frac{n\omega}{2}\mu^2+2\frac{n\omega}{2}y_i\mu-\frac{n\omega}{2}y_i^2 -\frac{\omega k_0}{2}\mu^2+\frac{\omega k_0}{2}2\mu_0\mu-\frac{\omega k_0}{2}\mu_0^2 -\beta_0\omega)  
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\frac{n\omega+\omega k_0}{2}\mu^2+({n\omega}y_i+{\omega k_0}\mu_0)\mu-\frac{n\omega}{2}y_i^2 -\frac{\omega k_0}{2}\mu^2 -\beta_0\omega)  
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\frac{n\omega+\omega k_0}{2}\mu^2+({n\omega}y_i+{\omega k_0}\mu_0)\mu-\frac{n\omega}{2}y_i^2 -\frac{\omega k_0}{2}\mu^2 -\beta_0\omega)  
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\beta_0\omega) exp(\mu^2-\frac{2({n\omega}y_i+{\omega k_0}\mu_0)}{n\omega+\omega k_0}\mu-\frac{n\omega}{n\omega+\omega k_0}y_i^2 -\frac{\omega k_0}{-{n\omega+\omega k_0}}\mu^2 ) 
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\beta_0\omega) exp((\mu -\frac{({n\omega}y_i+{\omega k_0}\mu_0)}{n\omega+\omega k_0})^2 -(\frac{({n\omega}y_i+{\omega k_0}\mu_0)}{n\omega+\omega k_0})^2 \\ &-\frac{n\omega}{n\omega+\omega k_0}y_i^2 -\frac{\omega k_0}{-{n\omega+\omega k_0}}\mu^2 ) 
+\\ &= \omega^{n/2+\alpha_{0}-1/2} exp(-\beta_0\omega) exp((\mu -\frac{(n y_i+ {k_0 \mu_0})}{n+ k_0})^2 -(\frac{({n}y_i+{k_0}\mu_0)}{n+ k_0})^2 \\ &-\frac{n}{n+k_0}y_i^2 -\frac{ k_0}{-{n+ k_0}}\mu^2 ) 
+\end{split}
+\end{equation}
+From this, we may know that $\mu_n = \frac{(n y_i+ {k_0 \mu_0})}{n+ k_0}$, $\alpha_n = n/2+\alpha_{0}$, $\beta_n =\beta_0+(\frac{({n}y_i+{k_0}\mu_0)}{n+ k_0})^2 + \frac{n}{n+k_0}y_i^2 + \frac{ k_0}{-{n+ k_0}}\mu^2 $, $k_n = k_0 +n$
+\end{solution}
+
 \begin{exercise}
   Derive the conditional posterior distribution $p(\mu|\omega,y_1,\dots, y_n)$ and $p(\omega|y_1,\dots, y_n)$ (or if you'd prefer, $p(\mu|\sigma^2, y_1,\dots, y_n)$ and $p(\sigma^2|y_1,\dots, y_n)$). Based on this and the previous exercise, what are reasonable interpretations for the parameters $\mu_0,\kappa_0, \alpha_0$ and $\beta_0$?
 \end{exercise}
+
+\begin{solution}
+Based on Bayes law, $p(\mu |\omega, y_1,\dots, y_n) \propto p(y_1, \dots, y_n| \mu, \omega) \cdot p(\mu| \omega)  $ Given conditions above, we may re-write this equation as following:
+\begin{equation}
+\begin{split}
+p(y_1, \dots, y_n| \mu, \omega) \cdot p(\mu| \omega) &\propto \prod_i^n N(\mu, 1/\omega) N(\mu, 1/(\omega \kappa_0))
+\\ &\propto \prod_i^nw^{1/2}exp(-\frac{\omega}{2}(\mu-y_i)^2) \omega^{1/2}exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2)
+\\ &= w^{n/2}exp(-\sum_i^n\frac{\omega}{2}(\mu-y_i)^2) \omega^{1/2} exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2) 
+\\ & \propto exp(\frac{-\omega n}{2}(\mu^2 - 2\mu y_i + y_i^2) -\frac{\omega k_0}{2}(\mu^2-2\mu\mu_0+\mu_0^2))
+\\ & \propto exp(\frac{-\omega n}{2}\mu^2 + \frac{\omega n}{2}2\mu y_i + \frac{-\omega n}{2}y_i^2 -\frac{\omega k_0}{2}\mu^2+\frac{\omega k_0}{2}2\mu\mu_0-\frac{\omega k_0}{2}\mu_0^2)
+\\ & \propto exp(\frac{-\omega n}{2}\mu^2 + \frac{\omega n}{2}2\mu y_i - \frac{\omega n}{2}y_i^2 -\frac{\omega k_0}{2}\mu^2+\frac{\omega k_0}{2}2\mu\mu_0-\frac{\omega k_0}{2}\mu_0^2)
+\\ & \propto exp(\frac{-\omega(n +k_0)}{2}(\mu-\frac{\sum y_i + k_0\mu_0}{n+k_0}))
+\end{split}
+\end{equation}
+Based on this, we know that it has mean $\frac{\sum y_i + k_0\mu_0}{n+k_0}$
+\par
+On the other hand, we may obtain $p(\omega|y_1,\dots,y_n)$ by:
+\begin{equation}
+\begin{split}
+p(\omega|y_1,\dots,y_n) & \propto p(y_1, \dots, y_n|\mu, \omega) \cdot p(\omega)
+\\ & \propto \prod_i^n\omega^{1/2}exp(-\frac{\omega}{2}(\mu-y_i)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega) 
+\\ &= \omega^{n/2}exp(-\frac{\omega}{2} \sum_i^n(\mu-y_i)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega) 
+\\ &= \omega^{n/2}exp(-\frac{\omega}{2} \sum_i^n(\mu-y_i)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega) 
+\\ &= \omega^{\alpha_0-1+n/2}exp(-\frac{\omega}{2} \sum_i^n(\mu-y_i)^2 -\beta_0\omega) 
+\end{split}
+\end{equation}
+Thus, it will fillow gamma distribution with $(\alpha_0+n/2-1, \beta_0+\sum_i^n(\mu-y_i)^2/2)$
+\end{solution}
 
 \begin{exercise}
   Show that the marginal distribution over $\mu$ is a centered, scaled $t$-distribution (note we showed something very similar in the last set of exercises!), i.e.\
   $$p(\mu) \propto \left(1+\frac{1}{\nu}\frac{(\mu-m)^2}{s^2}\right)^{-\frac{\nu+1}{2}}$$
   What are the location parameter $m$, scale parameter $s$, and degree of freedom $\nu$?
 \end{exercise}
+\begin{solution}
+Since we know $p(\mu) = \int p(\mu, \omega) d\omega \propto \int p(\mu| \omega)p(\omega)d\omega$, we can write the equation as following: 
+\begin{equation}
+\begin{split}
+p(\mu) &= \int p(\mu, \omega) d\omega \propto \int p(\mu| \omega)p(\omega)d\omega
+\\ &\propto \int \omega^{1/2}exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2) \omega^{\alpha_0-1}exp(-\beta_0\omega)  dw
+\\ &\propto \int \omega^{\alpha_0+1/2-1}exp(-\frac{\omega k_0}{2}(\mu-\mu_0)^2 -\beta_0\omega)  dw
+\end{split}
+\end{equation}
+We have the kernel of gamma $Gamma(\alpha_0+1/2, \frac{k_0}{2}(\mu-\mu_0)^2 +\beta_0)$. Thus, we can use this to integration.
+\begin{equation}
+\begin{split}
+p(\mu) &\propto  [\frac{\Gamma(\alpha_0 + \frac{1}{2})}{\frac{k_0}{2}(\mu-\mu_0)^2 +\beta_0}]^{\alpha_0 + 1/2}
+\\ & \propto [\beta_0 + \frac{\kappa_0(\mu - \mu_0)^2}{2}]^{-(\alpha_0 + 1/2)}
+\\ & \propto [1 + \frac{1}{2\alpha_0}\frac{\alpha_0\kappa_0(\mu - \mu_0)^2}{\beta_0}]^{-\frac{(2\alpha_0 +1 )}{2}}
+\end{split}
+\end{equation}
+From this, we can know that $m =\mu_0, \nu= 2 \alpha_0, s = \sqrt{\frac{\beta_0}{\alpha_0 \kappa_0}}$.
+\end{solution}
 
 \begin{exercise}
   The marginal posterior $p(\mu|y_1,\dots, y_n)$ is also a centered, scaled $t$-distribution. Find the updated location, scale and degrees of freedom.
 \end{exercise}
+\begin{solution}
+Again, what we need to do is integration over $p(\mu, \omega |y_1, \dots, y_n)$ respect $\omega$.
+\begin{equation}
+\begin{split}
+p(\mu |y_1, \dots, y_n) &= \int p(\mu, \omega |y_1, \dots, y_n) d\omega
+\\ &= \int \omega^{n/2+\alpha_{0}-1/2}  exp((\mu -\frac{(n y_i+ {k_0 \mu_0})}{n+ k_0})^2) exp(-\beta_0\omega-(\frac{({n}y_i+{k_0}\mu_0)}{n+ k_0})^2 \\ &-\frac{n}{n+k_0}y_i^2 -\frac{ k_0}{-{n+ k_0}}\mu^2 ) d\omega
+\end{split}
+\end{equation}
+Then, we may approach similarly how we did in previous exercise.
+\begin{equation}
+\begin{split}
+p(\mu |y_1, \dots, y_n) &\propto \int \omega^{n/2+\alpha_{0}-1/2}  exp((\mu -\frac{(n y_i+ {k_0 \mu_0})}{n+ k_0})^2) exp(-\beta_0\omega-(\frac{({n}y_i+{k_0}\mu_0)}{n+ k_0})^2 -\frac{ny_i^2-k_0\mu^2}{n+k_0} ) d\omega
+\\ &\propto 
+[1 + \frac{1}{2(\alpha_0 + \frac{n}{2})}\frac{(\alpha_0 + \frac{n}{2})(k_0 + n)(\mu - \frac{k_0 \mu_0 + n\overline{y}}{k_0 + n})^2}{ \beta_0 + \frac{1}{2} [\frac{k_0 n (\overline{y}-\mu_0)^2}{k_0+n} + \sum_{i=1}^{n} (y_i - \overline{y})^2 ]}]^{-\frac{(2(\alpha_0 + \frac{n}{2}) +1 )}{2}}
+\end{split}
+\end{equation}
+From this, we can know $m = \mu_n = \frac{k_0 \mu_0 + n\overline{y}}{k_0 + n}, \nu= 2 ( \alpha_0 + \frac{n}{2})= 2 \alpha_n, s = \sqrt{\frac{\beta_n}{\alpha_n \kappa_n}}$
+\end{solution}
+
 
 \begin{exercise}
   Derive the posterior predictive distribution $p(y_{n+1},\dots, y_{n+m}|y_1,\dots, y_{m})$.
 \end{exercise}
 
+\begin{solution}
+To obtain $p(y_{n+1},\dots, y_{n+m}|y_1,\dots, y_{m})$, we need two distributions: $p(\mu, \omega|y_1,\dots, y_{m})$ and $p(y_{m+1},\dots, y_{m+n}|\mu, \omega )$. More specifically, $\int \int p(y_{m+1},\dots, y_{m+n}|\mu, \omega )p(\mu, \omega|y_1,\dots, y_{m}) d\mu d\omega $ will return us the posterior predictive distribution. 
+
+$$\int\int p(y_{m+1},\dots, y_{m+n}|\mu, \omega )p(\mu, \omega|y_1,\dots, y_{m}) d\mu d\omega $$
+$$ \propto \omega^{m/2+\alpha_{0}-1/2} exp(-\sum_{n+1}^{n+m}\frac{\omega}{2}(\mu-y_i)^2) \omega^{\alpha_n-\frac{1}{2}} exp((\mu -\frac{(n y_i+ {k_0 \mu_0})}{n+ k_0})^2 +\beta_n) $$ 
+$$\propto \omega^{m/2+\alpha_{0}-1/2} exp(-\sum_{n+1}^{n+m}\frac{\omega}{2}(\mu-y_i)^2) \omega^{n/2+\alpha_{0}-1/2} exp(-\beta_0\omega) exp((\mu -\frac{(n y_i+ {k_0 \mu_0})}{n+ k_0})^2 -(\frac{({n}y_i+{k_0}\mu_0)}{n+ k_0})^2)$$
+\end{solution}
+
 \begin{exercise}
   Derive the marginal distribution over $y_1,\dots, y_n$.
 \end{exercise}
 
+\begin{solution}
+Marginal distribution over $y_1,\dots, y_n$ would be $p(y_1,\dots, y_n) = $
+\end{solution}
 
-
-
+\begin{solution}
+\end{solution}
 
 \section{Bayesian inference in a multivariate Gaussian model}
 
@@ -154,9 +253,22 @@ $$p(\Sigma|\nu_0, \Lambda_0^{-1}) = \frac{|\Lambda|^{\nu_0/2}}{2^{(\nu_0 +d)/2}\
 
 where
 $\Gamma_d(x) = \pi^{d(d-1)/4}\prod_{i=1}^d\Gamma\left(x-\frac{j-1}{2}\right)$.
+
 \begin{exercise}
   Show that in the univariate case, the inverse Wishart distribution reduces to the inverse gamma distribution.
 \end{exercise}
+
+
+
+\begin{solution}
+$p(\Sigma|\nu_0, \Lambda_0^{-1})$ is the univariate, d = 1; 
+\begin{equation}
+\begin{split}
+p(\Sigma|\nu_0, \Lambda_0^{-1}) &= \frac{|\Lambda|^{\nu_0/2}}{2^{(\nu_0 +1)/2}\Gamma_d(\nu_0/2)}|\Sigma|^{-\frac{\nu_0+2}{2}}e^{-\frac{1}{2}\mbox{tr}(Lambda\Sigma^{-1})} \\ &= \frac{(|\Lambda|/2)^{\nu_0/2}}{\sqrt{2}\Gamma_d(\nu_0/2)}|\Sigma|^{-\frac{\nu_0+2}{2}}e^{-\frac{1}{2}\mbox{tr}(Lambda\Sigma^{-1})}
+\end{split}
+\end{equation}
+It is inverse-gamma($\nu/2, \Lambda/2$)
+\end{solution}
 
 \begin{exercise}
   Let $\Sigma \sim \mbox{Inv-Wishart}(\nu_0, \Lambda_0^{-1})$ and $\mu|\Sigma \sim \mbox{N}(\mu_0, \Sigma/\kappa_0)$, so that
@@ -173,6 +285,31 @@ $\Gamma_d(x) = \pi^{d(d-1)/4}\prod_{i=1}^d\Gamma\left(x-\frac{j-1}{2}\right)$.
   
   Based on this, give interpretations for the prior parameters.
 \end{exercise}
+
+\begin{solution}
+\begin{equation}
+\begin{split}
+p(\mu, \Sigma | y_1, \dots, y_n) &\propto p(y_1, \dots, y_n | \mu, \Sigma)p(\mu, \Sigma) \\
+p(y_1, \dots, y_n | \mu, \Sigma)p(\mu,\Sigma) &\propto \prod |\Sigma|^{\frac{1}{2}}exp(-\frac{(y_i-\mu)^T\Sigma^{-1}(y_i-\mu)}{2})
+|\Sigma|^{-\frac{\nu_0+d+2}{2}}e^{-\frac{1}{2}\mbox{tr}(\Lambda_0\Sigma^{-1}) - \frac{\kappa_0}{2}(\mu-\mu_0)^T\Sigma^{-1}(\mu-\mu_0)}
+\end{split}
+\end{equation}
+Let's focus on exponential part, first.
+\begin{equation}
+\begin{split}
+exp(\sum_i^n-\frac{(y_i-\mu)^T\Sigma^{-1}(y_i-\mu)}{2}-\frac{1}{2}\mbox{tr}(\Lambda_0\Sigma^{-1}) - \frac{\kappa_0}{2}(\mu-\mu_0)^T\Sigma^{-1}(\mu-\mu_0)) \\
+exp( tr(1/2 \sum_{i=1}^n(y_i-\mu)\Sigma^{-1}(y_i-\mu)^T)-\frac{1}{2}\mbox{tr}(\Lambda_0\Sigma^{-1}) -\kappa_0(\mu-\mu_0)^T\Sigma^{-1}(\mu-\mu_0))\\
+exp( \mbox{tr}/2 [(\sum_{i=1}^n(y_i-\mu)\Sigma^{-1}(y_i-\mu)^T)-(\Lambda_0\Sigma^{-1}) - \kappa_0(\mu-\mu_0)\Sigma^{-1}(\mu-\mu_0)^T) ])\\
+exp( \mbox{tr}/2 [(\sum_{i=1}^n(y_i-\mu)(y_i-\mu)^T)-(\Lambda_0) - \kappa_0(\mu-\mu_0)(\mu-\mu_0)^T] \Sigma^{-1})\\
+exp( \mbox{tr}/2 [n(y_i y_i^T- y_i\mu^T - y_i^T\mu +\mu\mu^T)-(\Lambda_0) - \kappa_0(\mu\mu^T-\mu_0^T\mu -\mu_0\mu^T+\mu_0\mu^T_0)^T] \Sigma^{-1})\\
+exp( \mbox{tr}/2 [n y_iy_i^T-n y_i\mu^T - n y_i^T\mu +n \mu\mu^T -\Lambda_0 - \kappa_0(\mu\mu^T-\mu_0^T\mu -\mu_0\mu^T+\mu_0\mu^T_0)^T] )\\
+exp( \mbox{tr}/2 [(n+\kappa_0)\mu^2 -2\mu(n y_i^T+\kappa_0\mu_0^T) -\Lambda_0 - \kappa_0\mu_0^2+ny_i^2]) \\
+exp( \mbox{tr}/2 [(\mu - \frac{(n y_i^T+\kappa_0\mu_0^T)}{(n+\kappa_0)})^2 - (\frac{(n y_i^T+\kappa_0\mu_0^T)}{(n+\kappa_0)})^2 -\Lambda_0 - \kappa_0\mu_0^2+ny_i^2] \Sigma^{-1})\\
+\end{split}
+\end{equation}
+From this, we can know $\mu_n = n y_i^T+\kappa_0\mu_0^T, \nu_n = \nu_0+n, \kappa_n = \kappa_0+n$ and $\Lambda_n = - (\frac{(n y_i^T+\kappa_0\mu_0^T)}{(n+\kappa_0)})^2 -\Lambda_0 - \kappa_0\mu_0^2+ny_i^2] \Sigma^{-1}$
+\end{solution}
+
 \newpage
 \section{A Gaussian linear model}
 Lets now add in covariates, so that
@@ -186,15 +323,63 @@ Let's assume $\beta\sim \mbox{Normal}(\mu, (\omega K)^{-1})$ and $\omega \sim \m
 \begin{exercise}
   Derive the conditional posterior $p(\beta|\omega, y_1,\dots, y_n)$
 \end{exercise}
+\begin{solution}
+\begin{equation}
+\begin{split}
+p(\beta|\omega, y_1,\dots, y_n) & \propto p(y_1,\dots, y_n | \beta, \omega) \cdot p(\beta|\omega) 
+\\ & \propto exp(-1/2[(y-X\beta)^T)(\omega \Lambda)(y-X\beta)+(\beta-\mu)^T(\omega K)(\beta-\mu)])
+\\ & \propto exp(-1/2[\beta^TX^T\omega \Lambda X \beta -2 \beta X \omega \Lambda y +\beta^T K \beta -2\beta^T K \mu ])
+\\ & \propto exp(-1/2[\beta^T (X^T\omega \Lambda X +K)\beta -2 \beta X^T \omega \Lambda y  -2\beta^T K \mu ])
+\\ & \propto exp(-1/2[\beta^T (X^T\omega \Lambda X +K)\beta -2 \beta (X^T \omega \Lambda y  + K \mu)(X^T\omega \Lambda X +K)^{-1}(X^T\omega \Lambda X +K) ])
+\\ & \propto exp(-1/2(X^T\omega \Lambda X +K)[\beta^T\beta -2 \beta (X^T \omega \Lambda y  + K \mu)(X^T\omega \Lambda X +K)^{-1} ])
+\\ & \propto exp(-1/2[\beta - \frac{(X^T  \Lambda y  + K \mu)}{(X^T \Lambda X +K)}]^T(X^T\omega \Lambda X +K)[\beta - \frac{(X^T \Lambda y  + K \mu)}{(X^T\Lambda X +K)}])
+\end{split}
+\end{equation}
+Then we may say that $\mu_n = (X^T \omega \Lambda y  + K \mu)(X^T\omega \Lambda X +K)^{-1} $ and $\Sigma^-1 = \omega(X^T\omega \Lambda X +K)$
+\end{solution}
 
 \begin{exercise}
   Derive the marginal posterior $p(\omega|y_1,\dots, y_n)$
 \end{exercise}
 
+\begin{solution}
+\begin{equation}
+\begin{split}
+p(\omega|y_1,\dots, y_n) & \propto \int p(\beta, \omega|y_1,\dots, y_n) d\beta 
+\propto \int p(\omega) p(\beta | \omega) p(y_1,\dots, y_n | \omega, \beta) d\beta 
+\\ & \propto \int \omega^{(a+\frac{d+n}{2}-1)}exp(-\omega b) exp({-\frac{1}{2}}((\beta-\mu)^T(\omega\kappa)(\beta-\mu) + (y-X\beta)^T(\omega \Lambda)(y-X\beta)) d\beta
+\\ & \propto \omega^{(a+\frac{d+n}{2}-1)}exp(-\omega b)\int exp(-\frac{1}{2}((\beta-\mu)^T(\omega\kappa)(\beta-\mu) + (y-X\beta)^T(\omega \Lambda)(y-X\beta)) d\beta
+\\  & \propto \omega ^ {\alpha +\frac{d+n}{2} - 1} exp(-b \omega) \exp (-\frac{1}{2}  \omega (\mu^TK\mu + y^T\Lambda y)) \\& \int 
+exp{ -\frac{1}{2} \omega (\beta^TK\beta -2\mu^TK\beta -2y^T\Lambda X\beta + (X\beta)^T\Lambda X \beta)} d \beta 
+\\ & \propto \omega ^ {\alpha +\frac{d+n}{2} - 1} exp(-\omega(b+ -\frac{1}{2} (\mu^TK\mu + y^T\Lambda y)) \\& \int exp ({-\frac{1}{2} \omega (K+X^T \Lambda X) [(\beta - \frac{\mu K + Y^T \Lambda X}{K + X^T\Lambda X})^2 - ( \frac{\mu K + y^T\Lambda X}{K+X^T \Lambda X})^2]}) d \beta  
+\\ & \propto \omega ^ {\alpha +\frac{d+n}{2} - 1} exp (- \omega (b+ \frac{1}{2} (\mu^TK\mu + y^T\Lambda y)- \frac{1}{2} \mu_n^T (K+X^T\Lambda X)\mu_n)) 
+\end{split}
+\end{equation}
+Thus, we have following result, $\mu_n = \frac{\mu K + y^T\Lambda X}{K+X^T \Lambda X}, a_n = a+ \frac{n+d}{2}, b_n = b+ \frac{1}{2} [ (\mu^TK\mu + Y^T\Lambda Y)- \mu_n^T (K+X^T\Lambda X)\mu_n] $
+\end{solution}
+
 \begin{exercise}
   Derive the marginal posterior, $p(\beta|y_1,\dots, y_n)$
 \end{exercise}
-
+\begin{solution}
+\begin{equation}
+\begin{split}
+p(\beta|y_1, \cdots, y_n) & \propto \int p(\beta | \omega, y_1, \cdots, y_n) p(\omega | y_1, \cdots, y_n) d\omega
+\\ & \propto \int
+exp(-1/2[\beta - \frac{(X^T  \Lambda y  + K \mu)}{(X^T \Lambda X +K)}]^T(X^T\omega \Lambda X +K)[\beta - \frac{(X^T \Lambda y  + K \mu)}{(X^T\Lambda X +K)}]) \\&
+\omega ^ {\alpha +\frac{d+n}{2} - 1} exp (- \omega (b+ \frac{1}{2} (\mu^TK\mu + y^T\Lambda y)- \frac{1}{2} \mu_n^T (K+X^T\Lambda X)\mu_n)) 
+d\omega
+\end{split}
+\end{equation}
+We need to rewrite the term for convenience of further drive: $\mu_n =  \frac{(X^T  \Lambda y  + K \mu)}{(X^T \Lambda X +K)}, \alpha_n = \alpha +\frac{d+n}{2} , b_n = - (b+ \frac{1}{2} (\mu^TK\mu + y^T\Lambda y)- \frac{1}{2} \mu_n^T (K+X^T\Lambda X)\mu_n)$
+\begin{equation}
+\begin{split}
+\\ & \propto \int
+exp(-1/2[\beta - \mu_n]^T(X^T\omega \Lambda X +K)[\beta - \mu_n]) \omega ^ {\alpha_n - 1} exp (\omega b_n) 
+d\omega
+\end{split}
+\end{equation}
+\end{solution}
 
 \begin{exercise}
   Download the dataset dental.csv from Github. This dataset measures a dental distance (specifically, the distance between the center of the pituitary to the pterygomaxillary fissure) in 27 children. Add a column of ones to correspond to the intercept. Fit the above Bayesian model to the dataset, using $\Lambda=I$ and $K=I$, and picking vague priors for the hyperparameters, and plot the resulting fit. How does it compare to the frequentist LS and ridge regression results?
