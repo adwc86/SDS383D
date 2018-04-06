@@ -8,3 +8,6 @@ Welcome to SDS 383D! The full course details are on the [syllabus](SDS383D_sylla
 ## Exercises
 
 Slightly, slowly, but significantly, I am learning and studying Bayesian Statistics. This repository is not complete, solid and confident yet, but I am building it now.  :)
+
+To my second peer-reviewers: I couldn't finish exercise 3 and simulation part 2. Please understand incompleteness. Thank you
+
