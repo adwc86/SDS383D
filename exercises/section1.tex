@@ -318,6 +318,31 @@ Below are some exercises based on common conjugate priors.
   Suppose we have $N$ independent observations $x_1,\dots, x_N \stackrel{\small{iid}}{\sim}\mbox{Normal}(\mu, \sigma^2)$. If $\sigma^2$ is known and $\mu\sim \mbox{Normal}(\mu_0,\sigma_0^2)$, derive the posterior for $\mu|x_1,\dots, x_N$
 \end{exercise}
 
+
+\begin{solution}
+Since we have N independent normal observations, our likelihood function would be:
+\begin{equation*}
+f(x|\mu) = \frac{1}{\sqrt{2\pi\sigma^2}}{exp(\frac{1}{\sqrt{2\sigma^2}}\sum(x-\mu)^2)}
+\end{equation*}
+our prior function would be:
+\begin{equation*}
+p(x|\mu_0, \sigma_0^2) = \frac{1}{\sqrt{2\pi\sigma_0^2}}{exp(\frac{1}{\sqrt{2\sigma_0^2}}\sum(x-\mu_0)^2)}
+\end{equation*}
+Posterior would be then:
+\begin{equation*}
+\begin{split}
+p(x|\mu_0, \sigma_0^2) * f(x|\mu) \propto  \frac{1}{\sqrt{2\pi\sigma_0^2}}{exp(\frac{1}{\sqrt{2\sigma_0^2}}\sum(x-\mu_0)^2)} *  \frac{1}{\sqrt{2\pi\sigma^2}}{exp(\frac{1}{\sqrt{2\sigma^2}}\sum(x-\mu)^2)} \& \\\propto {exp(\frac{1}{\sqrt{2\sigma_0^2}}\sum(x-\mu_0)^2)} *{exp(\frac{1}{\sqrt{2\sigma^2}}\sum(x-\mu)^2)}
+\\ = exp(\frac{1}{\sqrt{2\sigma_0^2}}\sum(x^2-2x\mu_0+\mu_0^2)) * {exp(\frac{1}{\sqrt{2\sigma^2}}\sum(x^2 -2x\mu+\mu^2))}
+\\ \propto exp(\frac{n}{\sqrt{2\sigma_0^2}}(-2\bar{x}\mu_{0}+\mu_0^2))  {exp(\frac{n}{\sqrt{2\sigma^2}}(-2\bar{x}\mu+\mu^2))}
+\end{split}
+\end{equation*}
+If we bind with $\mu$ with the equation, then: 
+\begin{equation}
+exp()
+\end{equation}
+
+\end{solution}
+
 \begin{exercise}
   Now, let's assume  $x_1,\dots, x_N \stackrel{\small{iid}}{\sim}\mbox{Normal}(\mu, \sigma^2)$ with known mean $\mu$ but unknown variance $\sigma^2$. Let's express the likelihood in terms of the precision, $\omega=1\sigma^2$:
   $$f(x_i|\mu, \omega) = \sqrt{\frac{\omega}{2\pi}} \exp\left\{-\frac{\omega}{2}(x_i-\mu)^2\right\}$$
@@ -326,9 +351,30 @@ Below are some exercises based on common conjugate priors.
   Derive the posterior distribution for $\omega$
 \end{exercise}
 
+\begin{solution}
+Again, we will get posterior by likelihood times prior.
+\begin{equation}
+\begin{split}
+p(\omega | \mu, x) \propto \prod_{i=1}^{N} f(x_i|\mu, \omega)\cdot p(\omega) \propto  \prod_{i=1}^{N}\sqrt{\frac{\omega}{2\pi}} \exp\left\{-\frac{\omega}{2}(x_i-\mu)^2\right\} \cdot \frac{\beta^\alpha}{\Gamma(\alpha)}\omega^{\alpha-1}e^{-\beta \omega} \\ 
+\propto \omega^{n/2}\cdot exp({\sum_{i=1}^{n}\omega(x_i-\mu)^2}) \cdot \frac{\beta^\alpha}{\Gamma(\alpha)}\omega^{\alpha-1}e^{-\beta \omega}
+\\ \propto \omega^{n/2+\alpha -1} \cdot exp(({\sum_{i=1}^{n}(x_i-\mu)^2} -\beta)\cdot \omega)
+\end{split}
+\end{equation}
+\end{solution}
+
 \begin{exercise}
   Let's assume $x \sim \mbox{Normal}(0, \sigma^2)$ and that $\sigma^2\sim\mbox{InvGamma}(\alpha,\beta)$ (i.e.\ $1/\sigma^2 \sim \mbox{Gamma}(\alpha,\beta)$). Show that the marginal distribution of $x$ is given by a Student's $t$ distribution.
 \end{exercise}
+
+\begin{solution}
+Marginal distribution of x would be following:
+\begin{equation}
+\begin{split}
+p(x) = \int p(x|\sigma^2) p(\sigma^2) d\sigma^2 = \int \frac{1}{\sqrt{2\pi\sigma^2}}exp(\frac{1}{\sqrt{2\sigma^2}}x^2) \frac{\beta^\alpha}{\Gamma(\alpha)}(\sigma^2)^{\alpha-1}e^{-\beta \sigma^2} d{\sigma^2} = \frac{\beta^{\alpha}}{\Gamma(\alpha)\sqrt{2\pi}}\cdot \frac{\Gamma({\alpha+1/2})}{(\beta+\frac{x^2}{2})^{\alpha+1/2}} \\ = \frac{\Gamma({\alpha+1/2})}{\Gamma(\alpha)\sqrt{2\pi\beta}}\cdot(1+\frac{x^2}{2\beta})^{-(\alpha+1/2)}
+\end{split}
+\end{equation}
+
+\end{solution}
 
 \section{Multivariate normal distribution}
 
@@ -342,20 +388,80 @@ So far, we have looked at univariate random variables - particularly, the univar
   Show that a) $\Sigma = E[xx^T] - \mu\mu^T$; b) if the covariance of $x$ is $\sigma$, then the covariance of $Ax+b$ is $A\Sigma A^T$
 \end{exercise}
 
+\begin{solution}
+a)  
+\begin{equation*}
+\begin{split}
+\Sigma = \E\left[(x-\mu)(x-\mu)^T\right] = \E[x^2 -\mu^Tx-\mu x^T+\mu\mu^T] \\
+= \E[xx^T+\mu\mu^T]-\mu^T\E[x] -\mu\E[x^T] = \E[xx^T]-\mu\mu^T
+\end{split}
+\end{equation*}
+b)
+\begin{equation*}
+\begin{split}
+\E[Ax+b] &= A\mu+b \\
+\E[(Ax+b-(A\mu+b))(Ax+b-(A\mu+b))^T] &= \E[(Ax-A\mu)(Ax-A\mu)^T] \\
+&= \E[Axx^TA^T-Ax\mu^TA^T-A\mu x^TA^T+A\mu\mu^TA^T] \\
+&= \E[Axx^TA^T]-A\mu\mu^TA^T = A\Sigma A^T
+\end{split}
+\end{equation*}
+\end{solution}
+
 \begin{exercise}[Standard multivariate normal]
   The simplest multivariate normal, known as the standard multivariate normal, occurs where the entries of $x$ are independent and have mean 0 and variance 1. a) What is the moment generating function of a univariate normal, with mean $m$ and variance $v^2$? b) Express the PDF and moment generating function of the standard multivariate normal, in vector notation.
 \end{exercise}
 
+\begin{solution}
+a) From previous section, we learned and know that $M_X(s) = \E[\exp(s^Tx)] = \int_\mathcal{X} e^{s^Tx}p_X(x) dx$ is the Laplace transform of the PDF $p_X(x)$. If we plug in this, then we may have:
+\begin{equation}
+\begin{split}
+\begin{aligned}
+M_X(s) &= \E[\exp(s^Tx)] \\ &= \int_\mathcal{X} e^{s^Tx}p_X(x) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}}e^{s^Tx}e^{\frac{-1}{\sqrt{2v^2}}{(x-m)}^2}dx  
+\\ &=\int \frac{1}{\sqrt{2\pi v^2}} exp(-(x^2 -2mx +m^2 - 2v^2s^Tx)/{2v^2}) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}} exp(-(x^2 -2(m+v^2s^T)x +m^2)/{2v^2}) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}} exp(-(x^2 -2(m+v^2s^T)x +(m+v^2s^T)^2 - (m+v^2s^T)^2 +m^2 )/{2v^2}) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}} exp(-(x -(m+v^2s^T))^2 /{2v^2}) exp((m+v^2s^T)^2 - m^2 )/{2v^2}) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}} exp(-(x -(m+v^2s^T))^2 /{2v^2}) dx \cdot exp(m^2+ 2m v^2s^T +v^4s^{2T} - m^2 )/{2v^2}) 
+\\ &= \int \frac{1}{\sqrt{2\pi v^2}} exp(-(x -(m+v^2s^T))^2 /{2v^2}) dx \cdot exp(ms^T + v^2s^{2T}) 
+\end{aligned}
+\end{split}
+\end{equation}
+Since we know that $\int \frac{1}{\sqrt{2\pi v^2}} exp(-(x -(m+v^2s^T))^2 /{2v^2}) = 1$, so we can concluded that  $M_X(s) = exp(ms^T + v^2s^{2T}) $ \\
+b) Based on the result of a), we can substitute the variance term $v^2$ to variance matrix $\Sigma$ and we may have following (similar) result: 
+\begin{equation}
+\begin{split}
+\begin{aligned}
+M_X(s) &= \E[\exp(s^Tx)] 
+\\ &= \int_\mathcal{X} e^{s^Tx}p_X(x) dx 
+\\ &= \int \frac{1}{\sqrt{2\pi \Sigma}} exp(-(x -(m+\Sigma s^T))^2 /{2 \Sigma}) dx \cdot exp(ms^T + s^T\Sigma s) 
+\\ &= exp(ms^T + s^T\Sigma s) 
+\end{aligned}
+\end{split}
+\end{equation}
+\end{solution}
 
 \begin{exercise}[Multivariate normal]
   A random vector $x$ has multivariate normal distribution if and only if every linear combination of its elements is univariate normal, i.e.\ if the scalar value $z = a^Tx$ is normally distributed for all possible $x$. Prove that this implies that $x$ is multivariate normal if and only if its moment generating function takes the form $M_X(s) = \exp\left\{a^T\mu + \frac{1}{2}a^T\Sigma a\right\}$, where $\mu$ and $\Sigma$ are the mean and covariance of $x$. \textit{Hint: We know the moment generating function of $z$ in terms of the mean and variance of $z$, from the previous question...}
 \end{exercise}
+
+\begin{solution}
+From previous exercises, we know that $M_z(s) = \E_z[\exp(sz)]= \E_x[\exp(s a^Tx)]= M_x(sa^T) = exp(s a^T \mu + s^Ta^T\Sigma as)  $. From here we know that $\mu^*$ would be $a^T\mu$ and new variance term would be $s^{T}a^{T}\Sigma as$
+\end{solution}
   
 \begin{exercise}[Relationship to standard multivariate normal]
   An equivalent statement is that a random vector $x$ has multivariate normal distribution if and only if it can be written in the form
   $$x = Dz + \mu$$
   for some matrix $D$, real-valued vector $\mu$, and vector $z$ distributed according to a standard multivariate normal. Express the moment generating function of $x$ in terms of $D$, and uncover the relationship between $D$ and $\Sigma$. Use this result to suggest a method for generating multivariate normal random variables, if you have a method for generating Normal(0,1) univariate random variables.
 \end{exercise}
+
+\begin{solution}
+With $x = Dz+\mu$, we can utilize moment generating function:
+\begin{equation}
+M_x(s) = \E_x[\exp(s^T x)] =  \E_z[\exp(s^T(Dz+\mu))] = \exp(s^T\mu)\E_z[\exp(s^T{Dz})]
+\end{equation}
+Then from previous exercises, we can know that $ \exp(s^T\mu)\E_z[\exp(s^T{Dz})] $ is $\exp(s^T\mu)\exp(s^TD^T Ds)$ where $D^TD$ is equivalent to $\Sigma$.
+\end{solution}
 
 \begin{exercise}
   Use the result from the previous question to show that the PDF of a multivarite normal random vector $x\sim\mbox{Normal}(\mu, \Sigma)$ takes the form
@@ -374,6 +480,16 @@ Like its univariate counterpart, the multivariate normal distribution is closed 
 
   Derive the marginal distribution of $x_1$.
 \end{exercise}
+
+\begin{solution}
+Marginal distribution of $x_1$, $p(x_1)$, would be $\int p(x_1, x_2) dx_2$
+\begin{equation*}
+\begin{split}
+\int p(x_1, x_2) dx_2 & \propto \int exp(-1/2 [(x_1, \mu_1)]) 
+\end{split}
+\end{equation*}
+\end{solution}
+
 \begin{exercise}[Precision matrix]
   Earlier, we chose to express a univariate normal random variable in terms of its precision, to make math easier. We can also express a multivariate normal in terms of a precision matrix $\Omega = \Sigma^{-1}$. Partition $\Omega$ as
   $$\Omega = \begin{pmatrix}\Omega_{11} & \Omega_{12} \\ \Omega_{12}^T & \Omega_{22}\end{pmatrix}$$
@@ -382,11 +498,7 @@ Like its univariate counterpart, the multivariate normal distribution is closed 
 
 \begin{exercise}[Conditional distribution]
   The conditional distribution of $x_1|x_2$ is also normal, with mean $\mu_1+\Sigma_{12}\sigma_{22}^{-1}(x_2-\mu_2)$ and covariance $\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{12}^T$. Prove this for the case where $\mu$ is zero (the general case isn't really harder, just more tedious). \textit{Hint: ignore any constants that don't involve $x_1$. You might want to work with the log conditional density.}
-\end{exercise}
-%\begin{exercise}[Conjugacy]
-%  If $x\sim \mbox{Normal}(\mu, \Sigma)$ and $\mu \sim \mbox{Normal}(\mu_0,\Sigma_0)$, derive the posterior of $\mu|x$ \textit{again, ignoring normalizing constancts will make this easier}.
-%\end{exercise}
-  
+\end{exercise}  
 
 \section{Frequentist estimation and uncertainty quantification}
 
@@ -404,15 +516,42 @@ There are a number of options for estimating $\beta$. Three commonly used techni
   To obtain the theoretical moments, we can assume that $E[y_i|x_i] = x_i^T\beta$, implying that the covariance between the predictors $x_i$ and the residuals is zero. By setting the sample covariance between the $x_i$ and the $\epsilon_i$ to zero, derive a method of moments estimator $\hat{\beta}_{MM}$
 \end{exercise}
 
+\begin{solution}
+By setting the covariance between the $x_i$ and $\epsilon_i$ is zero, we may develop further to derive the method of moments estimator; $ cov(x_i, \epsilon_i) = E[x_i (y_i - x_i \beta)] = E[x_i y_i] - E[x_i^T x_i \beta] = 0$ \\
+$E[x_iy_i] = E[x_i^T x_i \beta] \rightarrow E[\beta] = E[x_i^{-1}x_i^{-T}x_iy_i]$
+\end{solution}
+
 \begin{exercise}[maximum likelihood]
   Show that, if we assume $\epsilon_i\sim \mbox{Normal}(0,\sigma^2)$, then the ML estimator $\hat{\beta}_{ML}$ is equivalent to the method of moments estimator.
 \end{exercise}
 
-
+\begin{solution}
+Since we are using ML estimator, $L(y) = p(y_1, ..., y_n|X,\beta) = \prod_i^n(y_i|x_i, \beta)$. If we expand this equation: 
+\begin{equation*}
+L(y) = \prod_i^n \frac{1}{\sqrt{2\pi\sigma^2}}exp(\frac{1}{2\sigma^2} (y_i-x_i\beta)^2) = exp(\frac{1}{2\sigma^2} \sum_i^n(y_i-x_i\beta)^2)
+\end{equation*}
+To find maximum likelihood, we need to take log and find derivative of log function in respect to $\beta$ becomes zero. In other words:
+\begin{equation*}
+\frac{d l(y)}{d \beta} = \frac{d log(exp(\frac{1}{2\sigma^2} \sum_i^n(y_i-x_i\beta)^2))}{d \beta} = \sum_i^n x_i^T(y_i-x_i\beta) = \sum_i^n x_i^Ty_i - \sum_i^n x_i^Tx_i\beta = 0
+\end{equation*}
+\begin{equation*}
+\sum_i^n x_i^Ty_i = \sum_i^n x_i^Tx_i \beta \rightarrow \beta_{ML} = (\sum_i^n x_i^Tx_i)^{-1}\sum_i^n x_i^Ty_i 
+\end{equation*}
+\end{solution}
 
 \begin{exercise}[Least squares loss function]
   Show that if we assume a quadratic loss function, i.e.\ $\hat{\beta}_{LS} = \arg\min_{\beta\in \mathbb{R}^p}\sum_{i=1}^N(y_i - x_i^T\beta)^2$, we recover the same estimator again.
 \end{exercise}
+
+\begin{solution}
+Loss function would be 
+\begin{equation}
+\begin{split}
+L = \sum_i^n(y_i-x_i\beta)^T(y_i - x_i\beta) \\
+\frac{dL}{d\beta} = -2 x_i^T(y_i -x_i\beta) = 0 \rightarrow \beta_{LS} = \frac{x_i^Ty_i}{x_i^Tx_i}
+\end{split} 
+\end{equation}
+\end{solution}
 
 \begin{exercise}[Ridge regression]
   We may wish to add a regularization term to our loss term. For example, ridge regression involves adding an L2 penalty term, so that
@@ -422,6 +561,14 @@ There are a number of options for estimating $\beta$. Three commonly used techni
   Reformulate this constrained optimization using a Lagrange multiplier, and solve to give an expression for $\hat{\beta}_{\small{ridge}}$. Comparing this with the least squares estimator, comment on why this estimator might be prefered in practice.
 \end{exercise}
 
+\begin{solution}
+After adding Lagrange multiplier, we may have following form of equation:
+$$L(\beta, \lambda) = (y-x\beta)^T(y-x\beta) + \lambda(\beta^2-t)$$
+$$\frac{dL}{d\beta} = \frac{d ((y-x\beta)^T(y-x\beta) + \lambda(\beta^2-t))}{d\beta} = 0$$
+$$\frac{dL}{d\beta} = -2x^T(y-x\beta)+2\lambda \beta =0 $$
+$$ -x^Ty+x^Tx\beta+\lambda\beta = 0$$
+$$ \beta_{ridge} = \frac{x^Ty}{x^Tx+\lambda}$$
+\end{solution}
   
 \subsection{Uncertainty quantification}
 
@@ -432,10 +579,35 @@ $$y = X\beta+\epsilon,\qquad \epsilon \sim \mbox{Normal}(0,\sigma^2 I)$$.
   What is the sampling distribution for $\hat{\beta}_{LS}$ ($=\hat{\beta}_{MM}=\hat{\beta}_{ML}$)?
 \end{exercise}
 
+\begin{solution}
+From exercise 1.21, we already know $\beta_{LS} = \frac{x_i^Ty_i}{x_i^Tx_i}$. By plugging in, we have:
+$$\beta_{LS} = \frac{x_i^Ty_i}{x_i^Tx_i} = {(x_i^Tx_i)}^{-1}x_i^T \cdot {(x_i\beta+\epsilon)} = \beta + {(x_i^Tx_i)}^{-1}x_i^T \epsilon$$
+Then, we may have expected value and variance:
+$$E[\beta_{LS}] = E[\beta + {(x_i^Tx_i)}^{-1}x_i^T \epsilon] = E[\beta] + E[{(x_i^Tx_i)}^{-1}x_i^T \epsilon] = E[\beta] $$
+$$ cov(\beta) = cov(\beta) + cov({(x_i^Tx_i)}^{-1}x_i^T \epsilon) = {(x_i^Tx_i)}^{-1}x_i^T \epsilon \cdot \epsilon x_i (x_i^T x_i)^{-T} =cov(\epsilon) / (x_i^Tx_i) = \sigma^2 / (x_i^Tx_i)$$  
+\end{solution}
+
 \begin{exercise}
   How about the sampling distribution for $\hat{\beta}_{\small{ridge}}$?
 \end{exercise}
 
+\begin{solution}
+From previous exercise, we know beta of ridge regression would be: 
+$$ \beta_{ridge} = \frac{x^Ty}{x^Tx+\lambda}$$
+By plugging $y=x\beta+\epsilon$, we may have following:
+\begin{equation*}
+\begin{split}
+\beta_{ridge} &= (x^Tx+\lambda)^{-1}{x^Ty}  \\ &= (x^Tx+\lambda)^{-1}x^T(x\beta+\epsilon) \\ &= (x^Tx+\lambda)^{-1}x^Tx\beta + (x^Tx+\lambda)^{-1}x^T\epsilon \\ &= \beta +\lambda^{-1}x^Tx\beta + x\epsilon+\lambda^{-1}x^T\epsilon
+\end{split}
+\end{equation*}
+Then, we may have expected value and variance:
+$$E[\beta_{ridge}] = \beta +\lambda^{-1}x^Tx\beta $$
+\begin{equation*}
+\begin{split}
+var(\beta_{ridge}) &= cov(x^Tx+\lambda)^{-1} X \epsilon) \\ &= cov(x^Tx+\lambda)^{-1} X \epsilon \epsilon X^T cov(x^Tx+\lambda)^{-T} \\&= \sigma^2 cov(x^Tx+\lambda)^{-1} XX^T cov(x^Tx+\lambda)^{-T}
+\end{split}
+\end{equation*}
+\end{solution}
 
 \begin{exercise}
   The two exercises above assumed the residual variance $\sigma^2$ is known. This is unlikely to be the case. Propose a strategy for estimating the standard error of $\hat{\beta}_{LS}$ from data, when $\sigma^2$ is unknown. Implement it in R, and test it on the dataset \texttt{Prestige} in the R package \texttt{cars} (there's a starter script, \texttt{prestige.R} on Github). Do you get the same standard errors as the built-in function \texttt{lm}?
